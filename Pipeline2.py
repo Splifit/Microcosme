@@ -124,7 +124,7 @@ def db_scan(points,space,nbr_points):
 
 ## MinKeep preprocessing and Height Factor classification. (Remove # for visualization)
 
-def prototype2(las_path,nbr_points,n_neighbors):
+def prototype2(las_path,nbr_points):
     with lp.open(las_path) as f:
         for point_cloud in f.chunk_iterator(nbr_points):
             ##Dataframe creation.
@@ -148,16 +148,16 @@ def prototype2(las_path,nbr_points,n_neighbors):
             #points=np.vstack((grp_df['x'],grp_df['y'], grp_df['z'])).transpose()
             #open3d_viz(points)
             ##Height Factor Classifier##
-            height_df,std=heigth_index_selector(grp_df,n_neighbors)
+            height_df,std=heigth_index_selector(grp_df,n_neigh)
             height_points=np.vstack((height_df['x'],height_df['y'], height_df['z'])).transpose()
             #open3d_viz(height_points)
             yield height_points , coords   
 
 ## Interpolation + DBSCAN classification + reinterpolation.## (visualization at each step activated)
-def pipeline2(las_path,nbr_points,n_neighbors,vizual_bool=False):
+def pipeline2(las_path,nbr_points):
     return_frame=pd.DataFrame({'x':[],'y':[],'z':[]})
     ##Call for the classified point of the building removing preprocessing + Skewness and Height Factor classification.
-    for (points,coord) in prototype2(las_path,nbr_points,n_neighbors):
+    for (points,coord) in prototype2(las_path,nbr_points):
 
         ##Interpolate grid.
         grid_x,grid_y= np.mgrid[coord[0]:coord[2],coord[1]:coord[3]]
@@ -218,23 +218,15 @@ def class_pipeline(las_path,nbr_points):
 
 
 #Some example to play with
-file4_path = 'buildings.laz'
-file5_path = 'new_test.laz'
-file6_path = 'last_test.laz'
-file7_path = 'digue.laz'
-file8_path = 'brugges.laz'
-file9_path = 'crash_test.laz'
-file10_path = 'test.laz'
-file11_path = 'relief.laz'
-file12_path = 'mignon.laz'
-file13_path= 'wood_plain.laz'
-file14_path= 'vrieselhof.laz'
-file15_path='test_bis.laz'
-file16_path='LiDAR_DHMV_2_P4_ATL12415_ES_20140110_15076_5_144500_207500.laz'
-file17_path='presentation.laz'
-file18_path='presentation_bis.laz'
+
+file1_path= 'Highway.laz'
+file2_path= 'last_test.laz'
+file3_path= 'vrieselhof.laz'
+file4_path='test_bis.laz'
+file5_path='presentation.laz'
+file6_path='presentation_bis.laz'
 
 #Block for final grid visualization.
-grid_dataframe=pipeline2(file4_path, 630000, n_neigh)   
+grid_dataframe=pipeline2(file1_path, 500000)   
 grid_points=np.vstack((grid_dataframe['x'],grid_dataframe['y'],grid_dataframe['z'])).transpose()
 open3d_viz(grid_points)

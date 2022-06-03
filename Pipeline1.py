@@ -274,7 +274,5 @@ def pipeline1(las_path,nbr_points,n_neighbors,vizual_bool=False):
 
 
 
-grid_dataframe=pipeline1('Philippe.laz', 500000, n_neigh)    
-grid_points=np.vstack((grid_dataframe['x'],grid_dataframe['y'],grid_dataframe['z'])).transpose()
-open3d_viz(grid_points)
+
 
